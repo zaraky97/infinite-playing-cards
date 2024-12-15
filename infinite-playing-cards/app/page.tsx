@@ -16,12 +16,12 @@ export default function Home() {
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const myCardsRef = React.useRef<Card[]>([]);
   const opponentCardsRef = React.useRef<Card[]>([]);
-  const drawedCardsRef = React.useRef<Card[]>([]);
+  const pooledCardsRef = React.useRef<Card[]>([]);
   const matchUpCountRef = React.useRef<number>(0);
 
   myCardsRef.current = myCards;
   opponentCardsRef.current = opponentCards;
-  drawedCardsRef.current = pooledCards;
+  pooledCardsRef.current = pooledCards;
   matchUpCountRef.current = matchUpCount;
 
   const initGame = () => {
@@ -56,6 +56,8 @@ export default function Home() {
       intervalRef.current = null;
     }
     setIsCompleted(true);
+    setMyCard(null);
+    setOpponentCard(null);
   };
 
   const playRound = () => {
@@ -82,7 +84,7 @@ export default function Home() {
     }
 
     if (myCard.value === opponentCard.value) {
-      setPooledCards([...drawedCardsRef.current, myCard, opponentCard]);
+      setPooledCards([...pooledCardsRef.current, myCard, opponentCard]);
       setMyCards(myCardsRef.current.filter((_, i) => i !== myCardIndex));
       setOpponentCards(
         opponentCardsRef.current.filter((_, i) => i !== opponentCardIndex)
@@ -95,7 +97,7 @@ export default function Home() {
         setOpponentCards([
           ...opponentCardsRef.current,
           myCard,
-          ...drawedCardsRef.current,
+          ...pooledCardsRef.current,
         ]);
         setMyCards(myCardsRef.current.filter((_, i) => i !== myCardIndex));
         setPooledCards([]);
@@ -105,7 +107,7 @@ export default function Home() {
         setMyCards([
           ...myCardsRef.current,
           opponentCard,
-          ...drawedCardsRef.current,
+          ...pooledCardsRef.current,
         ]);
         setOpponentCards(
           opponentCardsRef.current.filter((_, i) => i !== opponentCardIndex)
@@ -119,12 +121,11 @@ export default function Home() {
     initGame();
   }, []);
 
-  console.log(myCards, opponentCards, pooledCards);
-
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div>
-        infinite-playing-cards <div>試行回数:{matchUpCount}</div>
+      <div className="text-3xl">
+        infinite-playing-card{" "}
+        <div className="text-center text-2xl">試行回数:{matchUpCount}</div>
       </div>
 
       <div className="w-full flex justify-between gap-6">
@@ -139,7 +140,7 @@ export default function Home() {
             />
           ))}
         </div>
-        <div className="min-h-[500px]">
+        <div className="flex flex-col items-center justify-center min-h-[500px] gap-4">
           {myCard && (
             <Image
               src={`/images/${myCard?.suit}_${myCard?.value}.png`}
@@ -148,9 +149,9 @@ export default function Home() {
               height={504}
             />
           )}
-          あなたの枚数:{myCards.length}
+          <span className="text-2xl">あなたの枚数:{myCards.length}</span>
         </div>
-        <div className="min-h-[500px]">
+        <div className="flex flex-col items-center justify-center min-h-[500px] gap-4">
           {opponentCard && (
             <Image
               src={`/images/${opponentCard?.suit}_${opponentCard?.value}.png`}
@@ -159,7 +160,7 @@ export default function Home() {
               height={504}
             />
           )}
-          相手の枚数:{opponentCards.length}
+          <span className="text-2xl">相手の枚数:{opponentCards.length}</span>
         </div>
         <div className="min-w-[300px] max-h-[500px] overflow-y-scroll grid grid-cols-5 gap-2">
           {opponentCards.map((card, i) => (
@@ -174,9 +175,19 @@ export default function Home() {
         </div>
       </div>
       {isCompleted ? (
-        <button onClick={initGame}>リセット</button>
+        <button
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={initGame}
+        >
+          リセット
+        </button>
       ) : (
-        <button onClick={startGame}>開始</button>
+        <button
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          onClick={startGame}
+        >
+          開始
+        </button>
       )}
     </div>
   );
