@@ -4,6 +4,12 @@ import React from "react";
 import { DECKS } from "@/decks";
 import { Card } from "@/types/card";
 import Image from "next/image";
+import {
+  clearInterval,
+  clearTimeout,
+  setInterval,
+  setTimeout,
+} from "worker-timers";
 
 export default function Home() {
   const [myCard, setMyCard] = React.useState<Card | null>(null);
@@ -13,7 +19,7 @@ export default function Home() {
   const [pooledCards, setPooledCards] = React.useState<Card[]>([]);
   const [matchUpCount, setMatchUpCount] = React.useState(0);
   const [isCompleted, setIsCompleted] = React.useState(false);
-  const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = React.useRef<number | null>(null);
   const myCardsRef = React.useRef<Card[]>([]);
   const opponentCardsRef = React.useRef<Card[]>([]);
   const pooledCardsRef = React.useRef<Card[]>([]);
@@ -182,12 +188,16 @@ export default function Home() {
           リセット
         </button>
       ) : (
-        <button
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          onClick={startGame}
-        >
-          開始
-        </button>
+        <>
+          {!myCard && !opponentCard && (
+            <button
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={startGame}
+            >
+              開始
+            </button>
+          )}
+        </>
       )}
     </div>
   );
