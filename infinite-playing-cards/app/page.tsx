@@ -4,12 +4,7 @@ import React from "react";
 import { DECKS } from "@/decks";
 import { Card } from "@/types/card";
 import Image from "next/image";
-import {
-  clearInterval,
-  clearTimeout,
-  setInterval,
-  setTimeout,
-} from "worker-timers";
+import { clearInterval, setInterval, setTimeout } from "worker-timers";
 
 export default function Home() {
   const [myCard, setMyCard] = React.useState<Card | null>(null);
