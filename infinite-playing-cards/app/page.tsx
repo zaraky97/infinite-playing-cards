@@ -95,21 +95,21 @@ export default function Home() {
 
     if (myCard.value > opponentCard.value) {
       setTimeout(() => {
-        setOpponentCards([
-          ...opponentCardsRef.current,
-          myCard,
-          ...pooledCardsRef.current,
-        ]);
+        setOpponentCards(
+          [...opponentCardsRef.current, myCard, ...pooledCardsRef.current].sort(
+            (a, b) => a.value - b.value
+          )
+        );
         setMyCards(myCardsRef.current.filter((_, i) => i !== myCardIndex));
         setPooledCards([]);
       }, 50);
     } else {
       setTimeout(() => {
-        setMyCards([
-          ...myCardsRef.current,
-          opponentCard,
-          ...pooledCardsRef.current,
-        ]);
+        setMyCards(
+          [...myCardsRef.current, opponentCard, ...pooledCardsRef.current].sort(
+            (a, b) => a.value - b.value
+          )
+        );
         setOpponentCards(
           opponentCardsRef.current.filter((_, i) => i !== opponentCardIndex)
         );
@@ -126,11 +126,12 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="text-3xl">
         無限トランプ{" "}
+        {/* <Image src={"/images/top.webp"} alt="top" width={512} height={512} /> */}
         <div className="text-center text-2xl">試行回数:{matchUpCount}</div>
       </div>
 
       <div className="w-full flex justify-between gap-6">
-        <div className="min-w-[300px] max-h-[500px] overflow-y-scroll grid grid-cols-5 gap-2">
+        <div className="min-w-[300px] max-h-[500px] overflow-y-scroll grid grid-cols-5 content-start gap-2">
           {myCards.map((card, i) => (
             <Image
               key={i}
@@ -163,7 +164,7 @@ export default function Home() {
           )}
           <span className="text-2xl">相手の枚数:{opponentCards.length}</span>
         </div>
-        <div className="min-w-[300px] max-h-[500px] overflow-y-scroll grid grid-cols-5 gap-2">
+        <div className="min-w-[300px] max-h-[500px] overflow-y-scroll grid grid-cols-5 content-start gap-2">
           {opponentCards.map((card, i) => (
             <Image
               key={i}
